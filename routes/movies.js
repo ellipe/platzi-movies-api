@@ -1,14 +1,16 @@
 // Create a route.
 
 const { Router } = require('express')
-const { moviesMock } = require('../utils/mocks/movies')
+const MovieService = require('../services/movies')
 
 const router = new Router()
+const movieService = new MovieService()
 
 // TODO: Create a Controller file with the functions to handle every possible path under /api/movies/
 router.get('/', async (req, res) => {
+  const { tags } = req.query
   try {
-    const movies = await Promise.resolve(moviesMock)
+    const movies = await movieService.getMovies({ tags })
     res.status(200).json({
       data: movies,
       message: 'movies listed'
@@ -19,8 +21,9 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
+  const { id } = req.params
   try {
-    const movies = await Promise.resolve(moviesMock[0])
+    const movies = await movieService.getMovie({ id })
     res.status(200).json({
       data: movies,
       message: 'movie retrieved'
@@ -31,8 +34,9 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+  const { movie } = req.body
   try {
-    const createdMovieId = await Promise.resolve(moviesMock[0].id)
+    const createdMovieId = await movieService.createMovie({ movie })
     res.status(201).json({
       data: createdMovieId,
       message: 'movie created'
@@ -43,8 +47,10 @@ router.post('/', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
+  const { id } = req.params
+  const { movie } = req.body
   try {
-    const updatedMovieId = await Promise.resolve(moviesMock[0].id)
+    const updatedMovieId = await movieService.updateMovie({ id, movie })
     res.status(200).json({
       data: updatedMovieId,
       message: 'movie updated'
@@ -55,8 +61,9 @@ router.put('/:id', async (req, res) => {
 })
 
 router.delete('/:id', async (req, res) => {
+  const { id } = req.params
   try {
-    const deletedMovieId = await Promise.resolve(moviesMock[0].id)
+    const deletedMovieId = await movieService.deleteMovie({ id })
     res.status(200).json({
       data: deletedMovieId,
       message: 'movie deleted'
