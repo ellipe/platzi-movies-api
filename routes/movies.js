@@ -18,4 +18,52 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/:id', async (req, res) => {
+  try {
+    const movies = await Promise.resolve(moviesMock[0])
+    res.status(200).json({
+      data: movies,
+      message: 'movie retrieved'
+    })
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.post('/', async (req, res) => {
+  try {
+    const createdMovieId = await Promise.resolve(moviesMock[0].id)
+    res.status(201).json({
+      data: createdMovieId,
+      message: 'movie created'
+    })
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.put('/:id', async (req, res) => {
+  try {
+    const updatedMovieId = await Promise.resolve(moviesMock[0].id)
+    res.status(200).json({
+      data: updatedMovieId,
+      message: 'movie updated'
+    })
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const deletedMovieId = await Promise.resolve(moviesMock[0].id)
+    res.status(200).json({
+      data: deletedMovieId,
+      message: 'movie deleted'
+    })
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 module.exports = router
