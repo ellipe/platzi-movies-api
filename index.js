@@ -1,4 +1,7 @@
 const express = require('express')
+const bodyParser = require('body-parser')
+const morgan = require('morgan')
+const rfs = require('rotating-file-stream')
 
 // Config
 const routerConfig = require('./routes')
@@ -13,15 +16,23 @@ const notFoundHandler = require('./utils/middleware/notFoundHandler')
 // Start the express application
 const app = express()
 
+// create a rotating write stream
+const accessLogStream = rfs.createStream('access.log', {
+  size: '10M', // rotate every 10 MegaBytes written
+  interval: '1d', // rotate daily
+  compress: 'gzip' // compress rotated files
+})
+
+app.use(morgan('combined', { stream: accessLogStream }))
+
 // Middlewares.
-app.use(express.json())
+app.use(bodyParser.json())
 
 // Configure routes
 routerConfig(app)
-// Handler for 404 Errors
-app.use(notFoundHandler)
 
 // Error Handlers
+app.use(notFoundHandler)
 app.use(logError)
 app.use(wrapErrors)
 app.use(errorHandler)
