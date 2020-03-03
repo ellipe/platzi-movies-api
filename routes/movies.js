@@ -7,7 +7,7 @@ const router = new Router()
 const movieService = new MovieService()
 
 // TODO: Create a Controller file with the functions to handle every possible path under /api/movies/
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   const { tags } = req.query
   try {
     const movies = await movieService.getMovies({ tags })
@@ -16,11 +16,11 @@ router.get('/', async (req, res) => {
       message: 'movies listed'
     })
   } catch (err) {
-    console.log(err)
+    next(err)
   }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   const { id } = req.params
   try {
     const movies = await movieService.getMovie({ id })
@@ -29,15 +29,11 @@ router.get('/:id', async (req, res) => {
       message: 'movie retrieved'
     })
   } catch (err) {
-    console.log(err)
-    res.status(500).json({
-      data: null,
-      message: 'An error has ocurred'
-    })
+    next(err)
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   const { body: movie } = req
   try {
     const createdMovieId = await movieService.createMovie({ movie })
@@ -46,11 +42,11 @@ router.post('/', async (req, res) => {
       message: 'movie created'
     })
   } catch (err) {
-    console.log(err)
+    next(err)
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
   const { id } = req.params
   const { body: movie } = req
   try {
@@ -60,11 +56,11 @@ router.put('/:id', async (req, res) => {
       message: 'movie updated'
     })
   } catch (err) {
-    console.log(err)
+    next(err)
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   const { id } = req.params
   try {
     const deletedMovieId = await movieService.deleteMovie({ id })
@@ -73,7 +69,7 @@ router.delete('/:id', async (req, res) => {
       message: 'movie deleted'
     })
   } catch (err) {
-    console.log(err)
+    next(err)
   }
 })
 

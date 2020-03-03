@@ -1,15 +1,22 @@
 const express = require('express')
-const { config } = require('./config/index')
+
+// Config
 const routerConfig = require('./routes')
+const { config } = require('./config/index')
+const { logError, errorHandler } = require('./utils/middleware/errorHandler')
 
 // Start the express application
 const app = express()
 
-// Parsers.
+// Middlewares.
 app.use(express.json())
 
-// Configure router
+// Configure routes
 routerConfig(app)
+
+// Error Handlers
+app.use(logError)
+app.use(errorHandler)
 
 app.listen(config.port, () => {
   console.log(`Listening in port ${config.port}`)
