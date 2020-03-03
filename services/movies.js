@@ -1,28 +1,34 @@
-const { moviesMock } = require('../utils/mocks/movies')
+const MongoLib = require('../lib/mongo')
 
 class MoviesService {
-  async getMovies() {
-    const movies = await Promise.resolve(moviesMock)
+  constructor() {
+    this.collection = 'movies'
+    this.mongoDB = new MongoLib()
+  }
+
+  async getMovies({ tags }) {
+    const query = tags && { tags: { $in: tags } }
+    const movies = await this.mongoDB.getAll(this.collection, query)
     return movies || []
   }
 
-  async getMovie() {
-    const movie = await Promise.resolve(moviesMock[0])
+  async getMovie({ id }) {
+    const movie = await this.mongoDB.get(this.collection, id)
     return movie || {}
   }
 
-  async createMovie() {
-    const createdMovieId = await Promise.resolve(moviesMock[0])
+  async createMovie({ movie }) {
+    const createdMovieId = await this.mongoDB.create(this.collection, movie)
     return createdMovieId
   }
 
-  async updateMovie() {
-    const updatedMovieId = await Promise.resolve(moviesMock[0])
+  async updateMovie({ id, movie } = {}) {
+    const updatedMovieId = await this.mongoDB.update(this.collection, id, movie)
     return updatedMovieId
   }
 
-  async deleteMovie() {
-    const deleteMovieId = await Promise.resolve(moviesMock[0])
+  async deleteMovie({ id }) {
+    const deleteMovieId = await this.mongoDB.delete(this.collection, id)
     return deleteMovieId
   }
 }

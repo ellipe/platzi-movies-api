@@ -5,6 +5,9 @@ const routerConfig = require('./routes')
 // Start the express application
 const app = express()
 
+// Parsers.
+app.use(express.json())
+
 // Configure router
 routerConfig(app)
 

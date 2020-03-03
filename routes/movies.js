@@ -30,11 +30,15 @@ router.get('/:id', async (req, res) => {
     })
   } catch (err) {
     console.log(err)
+    res.status(500).json({
+      data: null,
+      message: 'An error has ocurred'
+    })
   }
 })
 
 router.post('/', async (req, res) => {
-  const { movie } = req.body
+  const { body: movie } = req
   try {
     const createdMovieId = await movieService.createMovie({ movie })
     res.status(201).json({
@@ -48,7 +52,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   const { id } = req.params
-  const { movie } = req.body
+  const { body: movie } = req
   try {
     const updatedMovieId = await movieService.updateMovie({ id, movie })
     res.status(200).json({
