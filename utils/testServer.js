@@ -1,9 +1,12 @@
 const express = require('express')
 const supertest = require('supertest')
 
-function testServer(route) {
+// In Memory Express Server
+// Creates a new Express Server, passses path and route to be configured.
+function testServer(path, route) {
   const app = express()
-  route(app)
+
+  app.use(path, route)
   return supertest(app)
 }
 
