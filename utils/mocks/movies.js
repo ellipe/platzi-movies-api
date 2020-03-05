@@ -159,12 +159,27 @@ function filteredMoviesMock(tag) {
 
 // Service Mock
 class MoviesServiceMock {
-  async getMovies() {
+  async getMovies({ tags }) {
+    if (tags) {
+      return Promise.resolve(filteredMoviesMock(tags))
+    }
     return Promise.resolve(moviesMock)
+  }
+
+  async getMovie({ id }) {
+    return Promise.resolve(moviesMock[0])
   }
 
   async createMovie() {
     return Promise.resolve(moviesMock[0])
+  }
+
+  async updateMovie({ id, movie } = {}) {
+    return Promise.resolve(moviesMock[1])
+  }
+
+  async deleteMovie({ id }) {
+    return Promise.resolve(id)
   }
 }
 
